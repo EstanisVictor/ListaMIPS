@@ -1,0 +1,69 @@
+.data
+
+mensagem: .asciiz "Informe um numero inteiro: "
+espaco: .asciiz " "
+linha: .asciiz "\n"
+
+.text
+	li $t3, 0
+	li $t4, 0
+	li $t7, 0
+	
+	
+	li $v0, 4
+	la $a0, mensagem
+	syscall
+	
+	li $v0, 5
+	syscall
+	#$t0 como se fosse indice do "for"
+	move $t0, $v0
+	#salvando o valor informado
+	move $t7, $v0
+	
+	#Verifica a parte de espaços a serem inseridos
+	lacoEspaco:
+		
+		li $t3, 0
+		#quantidade do indice $t0 - 1 = quantidade de espaços a serem gerados
+		subi $t4, $t0, 1
+	blt $t3, $t4, printEspaco #direciona para imprimir os espacos
+	
+	lacoNumero:
+		move $t2, $t7 #copiando o valor informado
+		bge $t2, $t0, printNumero #verifica se o numero informado é maior que o indice $t0 e direciona para imprimir
+		
+	quebraLinha:
+		subi $t0, $t0, 1
+		 #fazendo a quebra de linha
+		li $v0, 4
+		la $a0, linha
+		syscall
+		
+	bge $t0, 1, lacoEspaco #redirecionando para o laco que verifica o espaco até o indice $t0 igualar a 1 
+	j saida #caso o indice $t0 fica igual a 1, direciona para a saida do codigo
+	
+	#Imprimindo quantidade de espacos
+	printEspaco:	
+		addi $t3, $t3, 1
+		li $v0, 4
+		la $a0, espaco
+		syscall
+		
+	blt $t3, $t4, printEspaco #verifica se ainda tem espaços para imprimir
+	beq $t3, $t4, lacoNumero #caso não tenha mais espaços, direciona para o laço que verifia os numeros
+	
+	#Imprimindo os numeros
+	printNumero:
+	
+		li $v0, 1
+		la $a0, ($t2)
+		syscall
+		
+		subi $t2, $t2, 1
+	bge $t2, $t0, printNumero #verifica se ainda tem numero para imprimir
+	blt $t2, $t0, quebraLinha #caso n tenha mais numeros, direciona para realizar a quebra de linha
+	
+	
+	
+saida:

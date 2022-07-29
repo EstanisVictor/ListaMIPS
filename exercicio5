@@ -1,0 +1,49 @@
+.data
+
+mensagem: .asciiz "Informe um numero para a verificar: "
+sim: .asciiz "SIM"
+nao: .asciiz "NÃO"
+
+.text
+	li $t1, 0 #indice produto
+	li $t2, 0 #indice auxiliar
+
+	li $v0, 4
+	la $a0, mensagem
+	syscall
+	
+	li $v0, 5
+	syscall
+	move $t0, $v0
+	
+	while:
+		addi $t2, $t2, 1 #incrementando +1 em t2
+		
+		move $t6, $t2 #copiando o valor de t2, para poder fazer uma soma separada
+		move $t7, $t2 #copiando o valor de t2, para poder fazer uma soma separada
+		
+		addi $t6, $t6, 1 #somando +1 para utilizar no produto
+		addi $t7, $t7, 2 #somando +2 para utilizar no produto
+		
+		mul $t1, $t2, $t6 #produto com t2 e t6
+		mul $t1, $t1, $t7 #produto com t7 e o resultado de t2 e t6
+	#verificando se o produto é menor que o valor informado, se for possa ser que ainda o valor informado é triangular	
+	blt $t1, $t0, while
+	#se o produto é igual ao valor informado, ele é triangular
+	beq $t1, $t0, printSim
+	#caso contrario, ele não é
+	li $v0, 4
+	la $a0, nao
+	syscall
+	
+	j saida
+	 
+	printSim:
+		li $v0, 4
+		la $a0, sim
+		syscall
+saida:
+	
+	
+	
+	

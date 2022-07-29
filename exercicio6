@@ -1,0 +1,72 @@
+.data
+vet: .space 64
+melhor: .asciiz "\nMelhor nota: "
+setima: .asciiz "\n7º melhor nota: "
+
+.text
+
+la  $s0, vet
+addi $s1, $s0, 60
+
+preencheVet:
+	li $v0, 5
+	syscall
+	move $t6, $v0
+	
+	sw $t6, ($s0)
+	
+	addi $s0, $s0, 4
+	
+blt $s0, $s1, preencheVet
+
+la  $s0, vet
+addi $s1, $s0, 60 #ultima posição de memória do vetor
+#================================ORDENANDO================================
+
+laco1:
+	move $s2, $s0 #copiando o endereço de s0, s0 é o indice normal do vetor ,s2 será o indice seguinte do vetor
+	laco2:
+		bge $s2, $s1, continualaco1
+		
+		addi $s2, $s2, 4
+		
+		lw $t0, ($s0) #passando o valor do vetor
+		lw $t2, ($s2)
+		#verificando se a troca é nescessária
+		ble $t0, $t2, laco2
+		
+		#fazendo a troca dos valores
+		sw $t0, ($s2)
+		sw $t2, ($s0)
+	j laco2
+	
+continualaco1:
+	addi $s0, $s0, 4
+
+blt $s0, $s1, laco1
+
+#PEGANDO A MELHOR E A 7º MELHOR NOTA
+la  $s0, vet
+addi $s0, $s0, 60
+
+lw $t3, ($s0) #melhor nota
+
+li $v0, 4
+la $a0, melhor
+syscall
+
+li $v0, 1
+move $a0, $t3
+syscall
+
+
+subi $s0, $s0, 24
+lw $t4, ($s0) #7º melhor nota
+
+li $v0, 4
+la $a0, setima
+syscall
+
+li $v0, 1
+move $a0, $t4
+syscall

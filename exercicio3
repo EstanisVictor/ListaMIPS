@@ -1,0 +1,48 @@
+.data
+
+mensagem: .asciiz "Informe um numero para a serie: "
+virgula: .asciiz ", "
+
+.text
+	li $t1, 4
+	li $t2, 1
+	
+	li $v0, 4
+	la $a0, mensagem
+	syscall
+	
+	li $v0, 5
+	syscall
+	move $t0, $v0
+	
+	while:
+		li $v0, 1 #imprimindo o primeiro valor da sequencia que começa pelo valor do usuário
+		la $a0, ($t2)
+		syscall
+		
+		li $v0, 4 #imprimindo a virgula
+		la $a0, virgula
+		syscall
+		
+		li $v0, 1 #imprimindo o primeiro valor da sequencia que começa com 4
+		la $a0, ($t1)
+		syscall
+		
+		li $v0, 4 #imprimindo a virgula
+		la $a0, virgula
+		syscall
+		
+		li $v0, 1 #imprimindo o primeiro valor da sequencia que começa com 4
+		la $a0, ($t1)
+		syscall
+		
+		li $v0, 4 #imprimindo a virgula
+		la $a0, virgula
+		syscall
+		
+		addi $t1, $t1, 1 #add +1 na sequencia que começa com 4
+		addi $t2, $t2, 1 #add +1 na sequencia que começa pelo valor do usuário
+	ble $t2, $t0, while # se for verdadeiro, direciona para a labbel while, se nao finaliza
+	
+	
+	
